@@ -1,0 +1,61 @@
+services:
+  # =================================================================
+  # Sentinel Legacy v2.0 Control Plane Backend (FastAPI + Cedar Engine)
+  # =================================================================
+  - type: web
+    name: sentinel-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: oregon
+    healthCheckPath: /health/live
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+        # Can link to Neon Serverless Postgres (postgresql://...neon.tech/neondb?sslmode=require)
+        # or defaults to SQLite if left empty
+      - key: REDIS_URL
+        sync: false
+        # Can link to Upstash Serverless Redis (rediss://...upstash.io:6379)
+        # or defaults to InMemoryRedis fallback if left empty
+      - key: JWT_SECRET_KEY
+        generateValue: true
+      - key: ALLOWED_ORIGINS
+        value: "*"
+      - key: LLM_PROVIDER
+        value: auto
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_MODEL
+        value: google/gemini-2.0-flash-exp:free
+
+  # =================================================================
+  # Sentinel Legacy v2.0 Governance Console (React 18 + Vite SPA)
+  # =================================================================
+  - type: web
+    name: sentinel-dashboard
+    runtime: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: ./frontend/dist
+    plan: free
+    region: oregon
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: sentinel-backend
+          property: host
+      - key: VITE_WS_URL
+        fromService:
+          type: web
+          name: sentinel-backend
+          property: host

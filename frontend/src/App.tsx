@@ -9,6 +9,7 @@ import { AuditInvestigation } from './pages/AuditInvestigation';
 import { CompliancePanel } from './pages/CompliancePanel';
 import { useWebSocket } from './hooks/useWebSocket';
 import { Agent, Alert, HITLItem, AuditEntry } from './types';
+import { API_BASE_URL } from './config/api';
 
 export const App: React.FC = () => {
   const [currentTab, setCurrentTab] = useState<string>('dashboard');
@@ -251,7 +252,7 @@ export const App: React.FC = () => {
   // Fetch initial data from backend if available
   const refreshData = async () => {
     try {
-      const agentsRes = await fetch('http://localhost:8000/api/v1/agents');
+      const agentsRes = await fetch(`${API_BASE_URL}/api/v1/agents`);
       if (agentsRes.ok) {
         const data = await agentsRes.json();
         if (Array.isArray(data) && data.length > 0) setAgents(data);
@@ -261,7 +262,7 @@ export const App: React.FC = () => {
     }
 
     try {
-      const hitlRes = await fetch('http://localhost:8000/api/v1/hitl/queue');
+      const hitlRes = await fetch(`${API_BASE_URL}/api/v1/hitl/queue`);
       if (hitlRes.ok) {
         const data = await hitlRes.json();
         if (Array.isArray(data) && data.length > 0) setHitlItems(data);
@@ -271,7 +272,7 @@ export const App: React.FC = () => {
     }
 
     try {
-      const auditRes = await fetch('http://localhost:8000/api/v1/audit/entries?limit=50');
+      const auditRes = await fetch(`${API_BASE_URL}/api/v1/audit/entries?limit=50`);
       if (auditRes.ok) {
         const data = await auditRes.json();
         if (Array.isArray(data) && data.length > 0) setAuditEntries(data);
@@ -330,7 +331,7 @@ export const App: React.FC = () => {
 
   const handleExecuteKill = async (agentId: string, reason: string) => {
     try {
-      const resp = await fetch(`http://localhost:8000/api/v1/admin/kill-switch/${agentId}`, {
+      const resp = await fetch(`${API_BASE_URL}/api/v1/admin/kill-switch/${agentId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reason }),

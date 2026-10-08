@@ -11,6 +11,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import { Agent, Alert, HITLItem } from '../types';
+import { API_BASE_URL } from '../config/api';
 import { ViolationVelocityChart } from '../components/control/ViolationVelocityChart';
 import { AlertFeed } from '../components/control/AlertFeed';
 import { TokenCostChart } from '../components/observability/TokenCostChart';
@@ -48,7 +49,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
 
     try {
       if (type === 'normal') {
-        const resp = await fetch('http://localhost:8000/api/v1/proxy/mcp', {
+        const resp = await fetch(`${API_BASE_URL}/api/v1/proxy/mcp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -66,7 +67,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           type: 'success',
         });
       } else if (type === 'violation') {
-        const resp = await fetch('http://localhost:8000/api/v1/proxy/mcp', {
+        const resp = await fetch(`${API_BASE_URL}/api/v1/proxy/mcp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -84,7 +85,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
           type: 'blocked',
         });
       } else if (type === 'escalated') {
-        const resp = await fetch('http://localhost:8000/api/v1/proxy/mcp', {
+        const resp = await fetch(`${API_BASE_URL}/api/v1/proxy/mcp`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

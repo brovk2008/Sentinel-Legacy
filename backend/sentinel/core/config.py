@@ -10,9 +10,15 @@ class Settings(BaseSettings):
     postgres_db: str = "sentinel_legacy"
     postgres_user: str = "sentinel"
     postgres_password: str = "sentinel"
+    db_pool_size: int = 20
+    db_max_overflow: int = 10
+    db_pool_recycle: int = 300
+    db_pool_timeout: int = 30
+    db_echo: bool = False
 
-    # Redis
+    # Redis (Upstash / Redis Cloud / Local)
     redis_url: str = "redis://localhost:6379/0"
+    redis_connect_timeout: float = 3.0
 
     # JWT
     jwt_secret_key: str = "sentinel-legacy-hackathon-secret-32c-production-grade"

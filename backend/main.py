@@ -277,3 +277,31 @@ async def health_check():
         "cedar_engine": "active",
         "policy_spec": "MCP-2025-11-25",
     }
+
+
+@app.get("/health/live", tags=["Health"])
+async def liveness_probe():
+    """Liveness probe: verifies process is responsive."""
+    return {"status": "alive", "timestamp": datetime.utcnow().isoformat()}
+
+
+@app.get("/health/ready", tags=["Health"])
+async def readiness_probe():
+    """Readiness probe: validates database and Cedar engine operational readiness."""
+    db_ok = False
+    try:
+        async with AsyncSessionLocal() as session:
+            await session.execute(select(1))
+            db_ok = True
+    except Exception as e:
+        log.warning("Readiness probe DB check failed: %s", e)
+
+    cedar_ok = hasattr(app.state, "cedar_engine") and app.state.cedar_engine is not None
+
+    status_code = 200 if (db_ok and cedar_ok) else 503
+    return {
+        "status": "ready" if (db_ok and cedar_ok) else "degraded",
+        "database": "connected" if db_ok else "disconnected",
+        "cedar_engine": "loaded" if cedar_ok else "uninitialized",
+        "timestamp": datetime.utcnow().isoformat(),
+    }

@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import { HITLItem } from '../types';
 import { HITLBriefingCard } from '../components/hitl/HITLBriefingCard';
+import { API_BASE_URL } from '../config/api';
 
 interface HITLApprovalProps {
   items: HITLItem[];
@@ -34,7 +35,7 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
     setProcessingId(hitlId);
     setActionNotice(null);
     try {
-      const resp = await fetch(`http://localhost:8000/api/v1/hitl/${hitlId}/approve`, {
+      const resp = await fetch(`${API_BASE_URL}/api/v1/hitl/${hitlId}/approve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -60,7 +61,7 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
     setProcessingId(hitlId);
     setActionNotice(null);
     try {
-      const resp = await fetch(`http://localhost:8000/api/v1/hitl/${hitlId}/reject`, {
+      const resp = await fetch(`${API_BASE_URL}/api/v1/hitl/${hitlId}/reject`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

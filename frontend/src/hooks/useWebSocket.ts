@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { SentinelEvent } from "../types";
+import { WS_BASE_URL } from "../config/api";
 
 export function useWebSocket(role: string = "governance_admin") {
   const [events, setEvents] = useState<SentinelEvent[]>([]);
@@ -10,8 +11,7 @@ export function useWebSocket(role: string = "governance_admin") {
   const reconnectDelayRef = useRef(1000);
 
   const connect = useCallback(() => {
-    const wsUrl = (import.meta as any).env?.VITE_WS_URL || "ws://localhost:8000";
-    const fullUrl = `${wsUrl}/ws/dashboard?role=${role}&last_seq_ts=${lastTsRef.current}`;
+    const fullUrl = `${WS_BASE_URL}/ws/dashboard?role=${role}&last_seq_ts=${lastTsRef.current}`;
 
     try {
       const ws = new WebSocket(fullUrl);

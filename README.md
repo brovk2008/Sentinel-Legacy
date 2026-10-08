@@ -7,7 +7,7 @@
 ![Policy Engine: Cedar](https://img.shields.io/badge/Policy%20Engine-Cedar%20(Rust)-orange.svg?style=for-the-badge)
 ![Auth: RFC 8707](https://img.shields.io/badge/Auth-RFC%208707%20OAuth%202.1-green.svg?style=for-the-badge)
 ![Compliance](https://img.shields.io/badge/Compliance-DPDPA%202023%20%7C%20EU%20AI%20Act-purple.svg?style=for-the-badge)
-![Tests](https://img.shields.io/badge/Tests-27%2F27%20Passing-emerald.svg?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Tests-31%2F31%20Passing-emerald.svg?style=for-the-badge)
 ![Architecture](https://img.shields.io/badge/Protocol-MCP%202025--11--25-cyan.svg?style=for-the-badge)
 
 <p align="center">
@@ -23,6 +23,8 @@
 - [The Governance Problem](#the-governance-problem)
 - [System Architecture](#system-architecture)
 - [Free LLM API Integration (Google Gemini & OpenRouter)](#free-llm-api-integration-google-gemini--openrouter)
+- [Production Cloud Architecture (Neon, Upstash, Render, Vercel)](#production-cloud-architecture-neon-upstash-render-vercel)
+- [Python Client SDK (sentinel-governance-sdk)](#python-client-sdk-sentinel-governance-sdk)
 - [Core Subsystems](#core-subsystems)
   - [1. Formal Cedar Policy Engine](#1-formal-cedar-policy-engine-rust-native)
   - [2. RFC 8707 Audience-Bound OAuth 2.1 M2M Tokens](#2-rfc-8707-audience-bound-oauth-21-m2m-tokens)
@@ -160,6 +162,55 @@ LLM_PROVIDER="auto"
 1. **Dynamic Tool Planning**: The frontline agent (`SupportAgent`) submits user conversational intents (e.g., *"My order arrived broken, refund ₹700"*) to the configured LLM client.
 2. **Standard OpenAI-Compatible Protocol**: Google Gemini is invoked via its official OpenAI-compatible endpoint (`https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`), and OpenRouter via its public gateway (`https://openrouter.ai/api/v1/chat/completions`).
 3. **Formal Control Plane Enforcement**: Regardless of the LLM's raw output or prompt injection attacks, all proposed tool calls are intercepted by Sentinel's inline reverse proxy (`POST /api/v1/proxy/mcp`) for Cedar policy evaluation, RFC 8707 validation, and cryptographic ledger hashing.
+
+---
+
+## Production Cloud Architecture (Neon, Upstash, Render, Vercel)
+
+Sentinel Legacy v2.0 is architected for zero-downtime, horizontal cloud scalability with **100% free-tier compatibility** for developers and enterprises.
+
+| Tier | Cloud Provider | Free Tier Specification | Connection / Integration |
+| :--- | :--- | :--- | :--- |
+| **Relational Database** | **Neon** | **0.5 GB serverless PostgreSQL**, automatic branching, PgBouncer pooling | `DATABASE_URL=postgresql://neondb_owner:...@ep-cool-pooler.neon.tech/neondb?sslmode=require` |
+| **Cache & Queue** | **Upstash Redis** | **10,000 commands/day**, 256MB memory, native TLS (`rediss://`) | `REDIS_URL=rediss://default:...@...upstash.io:6379` |
+| **Backend API** | **Render / Railway** | Managed Docker runtime, dynamic `$PORT` binding, auto-HTTPS | 1-Click deploy via [`render.yaml`](render.yaml) |
+| **Governance UI** | **Vercel / Cloudflare** | Global Edge CDN, sub-50ms TTFB, SPA routing rewrites | 1-Click deploy via [`vercel.json`](vercel.json) |
+
+> [!TIP]
+> **Complete Production Deployment Guide:** See [DEPLOYMENT.md](DEPLOYMENT.md) for the exhaustive step-by-step walkthrough, 1-click cloud configuration, and the master credential checklist.
+
+---
+
+## Python Client SDK (`sentinel-governance-sdk`)
+
+To enable external teams and developers to integrate Sentinel's formal mathematical Cedar gating into their real production agents, Sentinel includes an installable Python SDK ([`sdk/python`](sdk/python)):
+
+### 1. Installation
+```bash
+pip install ./sdk/python
+# Or directly from GitHub:
+# pip install git+https://github.com/brovk2008/Sentinel-Legacy.git#subdirectory=sdk/python
+```
+
+### 2. Protect Any Agent Tool in 3 Lines of Code
+```python
+import os
+from sentinel_sdk import SentinelClient, governed_tool, PolicyViolationError
+
+# Connect to Sentinel Control Plane
+sentinel = SentinelClient(
+    control_plane_url=os.getenv("SENTINEL_URL", "https://sentinel-backend.onrender.com"),
+    client_id="agt_support_prod",
+    client_secret=os.getenv("SENTINEL_CLIENT_SECRET"),
+    agent_id="CustomerSupportAgent",
+)
+
+# Protect tool with Cedar gating and cryptographic audit logging
+@governed_tool(client=sentinel, action="process_refund", resource_type="Transaction")
+async def execute_stripe_refund(customer_id: str, amount: float, currency: str = "INR"):
+    # Real downstream execution ONLY executes if Cedar permits or human approves!
+    return {"status": "success", "amount": amount, "refund_id": "ref_9921"}
+```
 
 ---
 
@@ -375,7 +426,7 @@ Run the complete test suite across unit and integration targets:
 pytest tests/ -v
 ```
 
-### Verified Test Matrix (27/27 Passing)
+### Verified Test Matrix (31/31 Passing)
 - `tests/unit/test_cedar_engine.py`:
   - `test_permit_read_order_history`: Normal permit evaluation.
   - `test_forbid_export_customer_data`: Cedar `DATA-012` strict forbid.
@@ -403,6 +454,11 @@ pytest tests/ -v
   - `test_mock_llm_plan_normal_refund`: Verifies intelligent tool planning on low-risk customer refund requests.
   - `test_mock_llm_plan_high_value_refund`: Verifies escalation planning on high-value refund requests.
   - `test_mock_llm_plan_prompt_injection`: Verifies detection and tool planning under prompt injection attacks.
+- `tests/unit/test_sdk.py`:
+  - `test_sdk_execute_tool_permit`: Verifies SDK handles Cedar PERMIT and returns execution result.
+  - `test_sdk_execute_tool_forbid_raises_exception`: Verifies SDK raises `PolicyViolationError` on Cedar FORBID.
+  - `test_sdk_execute_tool_kill_switch_active`: Verifies SDK raises `KillSwitchActiveError` when quarantined.
+  - `test_sdk_governed_tool_decorator`: Verifies `@governed_tool` decorates agent functions and invokes control plane.
 - `tests/integration/test_mcp_proxy.py`:
   - `test_full_mcp_proxy_flow`: End-to-end proxy decision lifecycle.
 - `tests/integration/test_kill_switch.py`:

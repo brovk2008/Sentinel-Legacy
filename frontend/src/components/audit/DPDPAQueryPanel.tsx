@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, Search, Download, FileText, User, Cpu } from 'lucide-react';
+import { API_BASE_URL } from '../../config/api';
 
 interface DPDPAData {
   data_principal_id: string;
@@ -30,7 +31,7 @@ export const DPDPAQueryPanel: React.FC = () => {
     setLoading(true);
     try {
       const resp = await fetch(
-        `http://localhost:8000/api/v1/compliance/dpdpa/${encodeURIComponent(dataPrincipalId)}`
+        `${API_BASE_URL}/api/v1/compliance/dpdpa/${encodeURIComponent(dataPrincipalId)}`
       );
       if (resp.ok) {
         const data = await resp.json();

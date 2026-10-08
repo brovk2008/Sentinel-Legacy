@@ -168,14 +168,19 @@ async def get_redis() -> Any:
         return _redis_instance
 
     settings = get_settings()
+    timeout = getattr(settings, "redis_connect_timeout", 3.0)
     try:
-        client = aioredis.from_url(settings.redis_url, decode_responses=True)
-        # Quick ping test with short timeout
-        await asyncio.wait_for(client.ping(), timeout=1.0)
-        log.info("Connected to Redis server at %s", settings.redis_url)
+        kwargs: dict[str, Any] = {"decode_responses": True}
+        if settings.redis_url.startswith("rediss://"):
+            kwargs["ssl_cert_reqs"] = None
+
+        client = aioredis.from_url(settings.redis_url, **kwargs)
+        # Verify connection with configurable timeout
+        await asyncio.wait_for(client.ping(), timeout=timeout)
+        log.info("Connected to Redis server at %s", settings.redis_url.split("@")[-1] if "@" in settings.redis_url else settings.redis_url)
         _redis_instance = client
         return _redis_instance
     except Exception as e:
-        log.warning("Could not connect to Redis (%s). Using InMemoryRedis fallback.", e)
+        log.warning("Could not connect to external Redis (%s). Using InMemoryRedis fallback.", e)
         _redis_instance = InMemoryRedis()
         return _redis_instance

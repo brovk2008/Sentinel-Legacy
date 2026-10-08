@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ShieldCheck, ShieldAlert, RefreshCw, Lock, Hash } from 'lucide-react';
+import { API_BASE_URL } from '../../config/api';
 
 interface VerificationResult {
   is_valid: boolean;
@@ -17,7 +18,7 @@ export const ChainVerifier: React.FC = () => {
   const handleVerify = async () => {
     setLoading(true);
     try {
-      const resp = await fetch('http://localhost:8000/api/v1/audit/verify');
+      const resp = await fetch(`${API_BASE_URL}/api/v1/audit/verify`);
       if (resp.ok) {
         const data = await resp.json();
         setResult(data);
