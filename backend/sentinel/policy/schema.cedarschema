@@ -1,0 +1,97 @@
+{
+  "SentinelLegacy": {
+    "entityTypes": {
+      "Agent": {
+        "memberOfTypes": [],
+        "shape": {
+          "type": "Record",
+          "attributes": {
+            "role": { "type": "String", "required": true },
+            "department": { "type": "String", "required": true },
+            "trust_score": { "type": "Long", "required": true },
+            "status": { "type": "String", "required": true }
+          }
+        }
+      },
+      "Customer": {
+        "memberOfTypes": [],
+        "shape": {
+          "type": "Record",
+          "attributes": {
+            "id": { "type": "String", "required": true },
+            "tier": { "type": "String", "required": true },
+            "consent_active": { "type": "Boolean", "required": true },
+            "consent_purpose": { "type": "String", "required": false }
+          }
+        }
+      },
+      "Role": {
+        "memberOfTypes": [],
+        "shape": { "type": "Record", "attributes": {} }
+      }
+    },
+    "actions": {
+      "order.read": {
+        "appliesTo": {
+          "principalTypes": ["Agent"],
+          "resourceTypes": ["Customer"],
+          "context": {
+            "type": "Record",
+            "attributes": {
+              "request_ip": { "type": "String", "required": false }
+            }
+          }
+        }
+      },
+      "refund.create": {
+        "appliesTo": {
+          "principalTypes": ["Agent"],
+          "resourceTypes": ["Customer"],
+          "context": {
+            "type": "Record",
+            "attributes": {
+              "amount": { "type": "Long", "required": true },
+              "currency": { "type": "String", "required": true },
+              "approval_status": { "type": "String", "required": true },
+              "approval_id": { "type": "String", "required": false }
+            }
+          }
+        }
+      },
+      "bank_details.read": {
+        "appliesTo": {
+          "principalTypes": ["Agent"],
+          "resourceTypes": ["Customer"],
+          "context": { "type": "Record", "attributes": {} }
+        }
+      },
+      "db.export.all": {
+        "appliesTo": {
+          "principalTypes": ["Agent"],
+          "resourceTypes": ["Customer"],
+          "context": { "type": "Record", "attributes": {} }
+        }
+      },
+      "password.reset": {
+        "appliesTo": {
+          "principalTypes": ["Agent"],
+          "resourceTypes": ["Customer"],
+          "context": { "type": "Record", "attributes": {} }
+        }
+      },
+      "account.close": {
+        "appliesTo": {
+          "principalTypes": ["Agent"],
+          "resourceTypes": ["Customer"],
+          "context": {
+            "type": "Record",
+            "attributes": {
+              "approval_status": { "type": "String", "required": true },
+              "approval_id": { "type": "String", "required": false }
+            }
+          }
+        }
+      }
+    }
+  }
+}
