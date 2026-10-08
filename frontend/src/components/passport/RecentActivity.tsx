@@ -67,13 +67,13 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) =>
   const items = activities && activities.length > 0 ? activities : defaultActivities;
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 backdrop-blur-sm">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+    <div className="rounded-xl border border-[#1E2638] bg-[#0E1320] p-4">
+      <div className="flex items-center justify-between pb-3 border-b border-[#1E2638] mb-3">
         <div className="flex items-center gap-2">
-          <Clock className="w-4 h-4 text-cyan-400" />
-          <span className="text-sm font-semibold text-white">Recent Execution History</span>
+          <Clock className="w-4 h-4 text-blue-400" />
+          <span className="text-sm font-semibold text-white">Execution History</span>
         </div>
-        <span className="text-[11px] font-mono text-slate-500">Live Evaluation Feed</span>
+        <span className="text-[11px] font-mono text-slate-500">Live Evaluation Stream</span>
       </div>
 
       <div className="space-y-2">
@@ -95,7 +95,7 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) =>
           return (
             <div
               key={item.id}
-              className="p-2.5 rounded-lg bg-slate-950/60 border border-slate-800/80 hover:border-slate-700 transition-colors flex items-center justify-between text-xs"
+              className="p-2.5 rounded-lg bg-[#121826] border border-[#1E2638] hover:border-[#2B3852] transition-colors flex items-center justify-between text-xs"
             >
               <div className="flex items-center gap-3">
                 <span className={`px-2 py-0.5 rounded border text-[10px] font-mono font-bold flex items-center gap-1 ${badgeStyle}`}>
@@ -104,7 +104,7 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) =>
                 </span>
 
                 <div className="flex flex-col">
-                  <span className="font-mono font-semibold text-slate-200">
+                  <span className="font-mono font-medium text-slate-200">
                     {item.action}
                   </span>
                   <span className="text-[10px] font-mono text-slate-500 truncate max-w-xs">
@@ -115,8 +115,8 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) =>
 
               <div className="flex items-center gap-4">
                 {item.policy_id && (
-                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono text-cyan-400/80 bg-cyan-950/30 px-1.5 py-0.5 rounded border border-cyan-800/40">
-                    <Shield className="w-2.5 h-2.5" />
+                  <span className="hidden sm:inline-flex items-center gap-1 text-[10px] font-mono text-slate-300 bg-[#161D2C] px-1.5 py-0.5 rounded border border-[#2B364D]">
+                    <Shield className="w-2.5 h-2.5 text-blue-400" />
                     {item.policy_id}
                   </span>
                 )}

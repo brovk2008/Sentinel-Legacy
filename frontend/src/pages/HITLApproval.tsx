@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import {
   Users,
-  AlertTriangle,
   CheckCircle,
   XCircle,
-  Clock,
-  Filter,
   RefreshCw,
-  ShieldAlert,
 } from 'lucide-react';
 import { HITLItem } from '../types';
 import { HITLBriefingCard } from '../components/hitl/HITLBriefingCard';
@@ -48,12 +44,12 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
       });
 
       if (resp.ok) {
-        setActionNotice({ msg: `Action approved! Agent execution resumed.`, success: true });
+        setActionNotice({ msg: `Action approved. Agent execution resumed.`, success: true });
         if (onRefresh) onRefresh();
       } else {
         setActionNotice({ msg: `Approval recorded in local session.`, success: true });
       }
-    } catch (e) {
+    } catch {
       setActionNotice({ msg: `Approval recorded (local fallback active).`, success: true });
     } finally {
       setProcessingId(null);
@@ -74,14 +70,14 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
 
       if (resp.ok) {
         setActionNotice({
-          msg: `Action rejected! Agent notified with rationale & trust penalty applied.`,
+          msg: `Action rejected. Agent notified with rationale & trust penalty applied.`,
           success: false,
         });
         if (onRefresh) onRefresh();
       } else {
         setActionNotice({ msg: `Rejection recorded in local session.`, success: false });
       }
-    } catch (e) {
+    } catch {
       setActionNotice({ msg: `Rejection recorded (local fallback active).`, success: false });
     } finally {
       setProcessingId(null);
@@ -91,16 +87,16 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
   return (
     <div className="space-y-6">
       {/* Top Header Strip */}
-      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+      <div className="p-4 rounded-xl bg-[#0E1320] border border-[#1E2638] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400">
+          <div className="p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <h1 className="text-base font-semibold text-white tracking-tight flex items-center gap-2">
               <span>Human Oversight &amp; Decision Queue</span>
               {pendingCount > 0 && (
-                <span className="px-2 py-0.5 rounded-full text-xs font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 animate-pulse">
+                <span className="px-2 py-0.5 rounded text-xs font-mono font-medium bg-amber-500/10 text-amber-300 border border-amber-500/30">
                   {pendingCount} AWAITING
                 </span>
               )}
@@ -113,12 +109,12 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
 
         {/* Filter controls */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-slate-950 p-1 rounded-lg border border-slate-800 text-xs font-semibold">
+          <div className="flex items-center bg-[#0A0E18] p-1 rounded-lg border border-[#1E2638] text-xs font-medium">
             <button
               onClick={() => setFilter('PENDING')}
               className={`px-3 py-1 rounded-md transition-all ${
                 filter === 'PENDING'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                  ? 'bg-amber-500/15 text-amber-300 border border-amber-500/30'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -128,7 +124,7 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
               onClick={() => setFilter('RESOLVED')}
               className={`px-3 py-1 rounded-md transition-all ${
                 filter === 'RESOLVED'
-                  ? 'bg-slate-800 text-white'
+                  ? 'bg-[#182030] text-white border border-[#2A374F]'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -138,7 +134,7 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
               onClick={() => setFilter('ALL')}
               className={`px-3 py-1 rounded-md transition-all ${
                 filter === 'ALL'
-                  ? 'bg-slate-800 text-white'
+                  ? 'bg-[#182030] text-white border border-[#2A374F]'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
@@ -149,7 +145,7 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
           {onRefresh && (
             <button
               onClick={onRefresh}
-              className="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-colors"
+              className="p-2 rounded-lg bg-[#141A28] hover:bg-[#1C2438] text-slate-300 border border-[#222C3E] transition-colors"
               title="Refresh Queue"
             >
               <RefreshCw className="w-4 h-4" />
@@ -161,10 +157,10 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
       {/* Action Notice Toast */}
       {actionNotice && (
         <div
-          className={`p-3.5 rounded-xl border flex items-center justify-between text-xs font-mono ${
+          className={`p-3.5 rounded-lg border flex items-center justify-between text-xs font-mono ${
             actionNotice.success
-              ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300'
-              : 'bg-rose-950/40 border-rose-500/40 text-rose-300'
+              ? 'bg-emerald-950/30 border-emerald-500/30 text-emerald-300'
+              : 'bg-rose-950/30 border-rose-500/30 text-rose-300'
           }`}
         >
           <div className="flex items-center gap-2">
@@ -204,7 +200,7 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
           return (
             <div
               key={item.hitl_id}
-              className="p-4 rounded-xl border border-slate-800/80 bg-slate-900/40 backdrop-blur-sm flex flex-wrap items-center justify-between gap-4 text-xs font-mono"
+              className="p-4 rounded-xl border border-[#1E2638] bg-[#0E1320] flex flex-wrap items-center justify-between gap-4 text-xs font-mono"
             >
               <div className="flex items-center gap-3">
                 <div
@@ -219,7 +215,7 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold text-white">{item.briefing.action}</span>
+                    <span className="font-semibold text-white">{item.briefing.action}</span>
                     <span className="text-slate-400 font-sans">by {item.agent_id}</span>
                     <span
                       className={`px-2 py-0.2 rounded text-[10px] font-bold ${
@@ -237,21 +233,21 @@ export const HITLApproval: React.FC<HITLApprovalProps> = ({ items, onRefresh }) 
                 </div>
               </div>
 
-              <div className="text-right text-[11px] text-slate-500">
+              <div className="text-right text-[11px] text-slate-400 font-sans">
                 <div>Approver: {item.approver_role}</div>
-                <div>{new Date(item.requested_at).toLocaleTimeString()}</div>
+                <div className="font-mono text-[10px] text-slate-500">{new Date(item.requested_at).toLocaleTimeString()}</div>
               </div>
             </div>
           );
         })}
 
         {filteredItems.length === 0 && (
-          <div className="p-12 text-center rounded-xl border border-slate-800/60 bg-slate-900/20 flex flex-col items-center justify-center gap-3">
-            <CheckCircle className="w-10 h-10 text-emerald-400/60" />
-            <div className="text-sm font-semibold text-slate-300">
+          <div className="p-12 text-center rounded-xl border border-[#1E2638] bg-[#0E1320] flex flex-col items-center justify-center gap-2">
+            <CheckCircle className="w-8 h-8 text-emerald-500" />
+            <div className="text-sm font-semibold text-slate-200">
               No items in this queue
             </div>
-            <p className="text-xs text-slate-500 max-w-sm">
+            <p className="text-xs text-slate-400 max-w-sm">
               All agent actions are currently permitted autonomously under Cedar policy gates.
             </p>
           </div>

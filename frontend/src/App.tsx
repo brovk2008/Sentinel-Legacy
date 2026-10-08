@@ -358,7 +358,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#06090F] text-slate-100 flex flex-col font-sans selection:bg-cyan-500/30 selection:text-cyan-200">
+    <div className="min-h-screen bg-[#090D14] text-slate-100 flex flex-col font-sans selection:bg-blue-600/30 selection:text-blue-200">
       {/* Top Navigation Bar */}
       <TopNav
         wsConnected={wsConnected}
@@ -379,7 +379,7 @@ export const App: React.FC = () => {
         />
 
         {/* Main Content Area */}
-        <main className="flex-1 overflow-y-auto p-6 bg-radial-gradient">
+        <main className="flex-1 overflow-y-auto p-6 bg-[#090D14]">
           <div className="max-w-7xl mx-auto pb-12">
             {currentTab === 'dashboard' && (
               <Dashboard

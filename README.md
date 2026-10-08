@@ -208,7 +208,7 @@ flowchart TD
 
 ## Control Plane UI Walkthrough
 
-The Sentinel Legacy console is built with **React 18, Vite 5, and Tailwind CSS**, featuring an enterprise dark-mode cyberpunk glassmorphism aesthetic.
+The Sentinel Legacy console is built with **React 18, Vite 5, and Tailwind CSS**, featuring a clean, professional enterprise design system with refined dark-mode slate color grading, high-contrast typography, and authoritative operational cockpits.
 
 ```text
 ┌───────────────────────────────────────────────────────────────────────────────────────────┐

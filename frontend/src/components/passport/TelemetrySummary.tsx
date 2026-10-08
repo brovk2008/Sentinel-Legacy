@@ -26,22 +26,18 @@ export const TelemetrySummary: React.FC<TelemetrySummaryProps> = ({ telemetry })
 
   const cards = [
     {
-      title: 'Total Invocations',
+      title: 'Invocations',
       value: data.totalActions.toLocaleString(),
       subtitle: '30-day evaluated requests',
       icon: Activity,
-      color: 'text-cyan-400',
-      border: 'border-cyan-500/20',
-      bg: 'bg-cyan-950/10',
+      color: 'text-blue-400',
     },
     {
-      title: 'Token Consumption',
+      title: 'Token Usage',
       value: `${(data.totalTokens / 1000).toFixed(1)}k`,
-      subtitle: 'Prompt + GenAI completion',
+      subtitle: 'Prompt + Completion',
       icon: Zap,
       color: 'text-indigo-400',
-      border: 'border-indigo-500/20',
-      bg: 'bg-indigo-950/10',
     },
     {
       title: 'Attributed Cost',
@@ -49,35 +45,27 @@ export const TelemetrySummary: React.FC<TelemetrySummaryProps> = ({ telemetry })
       subtitle: 'OpenTelemetry gen_ai.cost',
       icon: DollarSign,
       color: 'text-emerald-400',
-      border: 'border-emerald-500/20',
-      bg: 'bg-emerald-950/10',
     },
     {
-      title: 'Cedar Latency',
+      title: 'Policy Latency',
       value: `${data.avgLatencyMs.toFixed(1)} ms`,
-      subtitle: 'Sub-millisecond policy check',
+      subtitle: 'Cedar evaluation time',
       icon: Clock,
-      color: 'text-purple-400',
-      border: 'border-purple-500/20',
-      bg: 'bg-purple-950/10',
+      color: 'text-slate-300',
     },
     {
-      title: 'Security Violations',
+      title: 'Violations Blocked',
       value: data.violationCount.toString(),
-      subtitle: 'Strict Cedar forbid triggers',
+      subtitle: 'Cedar forbid triggers',
       icon: ShieldAlert,
       color: data.violationCount > 0 ? 'text-rose-400' : 'text-slate-400',
-      border: data.violationCount > 0 ? 'border-rose-500/30' : 'border-slate-800',
-      bg: data.violationCount > 0 ? 'bg-rose-950/10' : 'bg-slate-900/40',
     },
     {
       title: 'HITL Escalations',
       value: data.hitlCount.toString(),
-      subtitle: 'Human-in-the-loop approvals',
+      subtitle: 'Human approval requests',
       icon: Users,
       color: 'text-amber-400',
-      border: 'border-amber-500/20',
-      bg: 'bg-amber-950/10',
     },
   ];
 
@@ -88,7 +76,7 @@ export const TelemetrySummary: React.FC<TelemetrySummaryProps> = ({ telemetry })
         return (
           <div
             key={idx}
-            className={`p-3.5 rounded-xl border ${card.border} ${card.bg} backdrop-blur-sm flex flex-col justify-between`}
+            className="p-3.5 rounded-xl border border-[#1E2638] bg-[#0E1320] flex flex-col justify-between"
           >
             <div className="flex items-center justify-between text-slate-400 mb-2">
               <span className="text-[11px] font-medium tracking-wide uppercase">{card.title}</span>

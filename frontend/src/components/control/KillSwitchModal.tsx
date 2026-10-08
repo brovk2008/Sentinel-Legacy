@@ -15,7 +15,7 @@ export const KillSwitchModal: React.FC<KillSwitchModalProps> = ({
   agents,
   onExecuteKill,
 }) => {
-  const [selectedAgentId, setSelectedAgentId] = useState<string>(agents[0]?.agent_id || 'agt_7a3f9c2d8e1b');
+  const [selectedAgentId, setSelectedAgentId] = useState<string>(agents[0]?.agent_id || 'SupportAgent');
   const [reason, setReason] = useState<string>('indirect_prompt_injection_suspected');
   const [customReason, setCustomReason] = useState<string>('');
   const [loading, setLoading] = useState(false);
@@ -37,19 +37,19 @@ export const KillSwitchModal: React.FC<KillSwitchModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-[#0B111D] border border-red-500/50 rounded-xl shadow-2xl max-w-lg w-full p-6 text-slate-100 cyber-border-red">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+      <div className="bg-[#0F1420] border border-[#2B364D] rounded-xl shadow-modal max-w-lg w-full p-6 text-slate-100">
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-          <div className="flex items-center space-x-3 text-red-400">
-            <div className="p-2 rounded-lg bg-red-500/10 border border-red-500/30">
-              <AlertOctagon className="w-6 h-6 text-red-500 animate-pulse" />
+        <div className="flex items-center justify-between pb-4 border-b border-[#1E2638]">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400">
+              <AlertOctagon className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-lg font-bold uppercase tracking-wider text-red-400">
-                EMERGENCY KILL SWITCH
+              <h2 className="text-base font-semibold text-white">
+                Emergency Kill Switch Cascade
               </h2>
-              <p className="text-xs text-slate-400 font-mono">Immediate Isolation & Token Revocation</p>
+              <p className="text-xs text-slate-400">Immediate Isolation &amp; Token Revocation</p>
             </div>
           </div>
           <button
@@ -57,7 +57,7 @@ export const KillSwitchModal: React.FC<KillSwitchModalProps> = ({
               setResult(null);
               onClose();
             }}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            className="p-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-[#1A2234]"
           >
             <X className="w-5 h-5" />
           </button>
@@ -66,10 +66,10 @@ export const KillSwitchModal: React.FC<KillSwitchModalProps> = ({
         {/* Body */}
         {result ? (
           <div className="py-6 space-y-4">
-            <div className="p-4 rounded-lg bg-emerald-950/40 border border-emerald-500/40 flex items-start space-x-3">
+            <div className="p-4 rounded-lg bg-emerald-950/30 border border-emerald-500/30 flex items-start space-x-3">
               <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-sm text-emerald-300">KILL SWITCH CASCADE EXECUTED</p>
+                <p className="font-semibold text-sm text-emerald-300">Kill Switch Successfully Executed</p>
                 <p className="text-xs text-slate-300 mt-1">{result.message}</p>
                 <div className="mt-3 flex items-center space-x-4 text-xs font-mono">
                   <span className="text-emerald-400 font-bold">Elapsed: {result.elapsed_ms}ms</span>
@@ -82,96 +82,91 @@ export const KillSwitchModal: React.FC<KillSwitchModalProps> = ({
                 setResult(null);
                 onClose();
               }}
-              className="w-full py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-bold uppercase tracking-wider text-slate-200"
+              className="w-full py-2 rounded-lg bg-[#1E2638] hover:bg-[#2B364D] text-xs font-medium text-slate-200"
             >
-              CLOSE
+              Close
             </button>
           </div>
         ) : (
           <div className="py-5 space-y-4 text-xs">
-            <div className="p-3 rounded-lg bg-red-950/30 border border-red-800/40 text-red-300/90 leading-relaxed font-mono">
-              ⚠️ WARNING: This will immediately set the agent's status to SUSPENDED, revoke all past and future Bearer tokens in Redis O(1), and purge the pending HITL approval queue.
+            <div className="p-3 rounded-lg bg-rose-950/20 border border-rose-800/40 text-rose-300/90 leading-relaxed font-sans">
+              <strong>Caution:</strong> This operation immediately transitions the agent to SUSPENDED status, blacklists all active JWT bearer tokens in Redis O(1), and purges pending HITL queue items.
             </div>
 
             <div>
-              <label className="block text-slate-300 font-medium mb-1.5 font-mono">
+              <label className="block text-slate-300 font-medium mb-1.5">
                 Target AI Agent
               </label>
               <select
                 value={selectedAgentId}
                 onChange={(e) => setSelectedAgentId(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs font-mono focus:border-red-500 focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg bg-[#0B0F18] border border-[#2B364D] text-slate-200 font-mono text-xs focus:outline-none focus:border-blue-500"
               >
                 {agents.map((a) => (
                   <option key={a.agent_id} value={a.agent_id}>
-                    {a.name} ({a.role} · Status: {a.status})
+                    {a.name} ({a.agent_id}) - Status: {a.status}
                   </option>
                 ))}
               </select>
             </div>
 
             <div>
-              <label className="block text-slate-300 font-medium mb-1.5 font-mono">
-                Security Rationale
+              <label className="block text-slate-300 font-medium mb-1.5">
+                Revocation Rationale
               </label>
-              <select
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs font-mono focus:border-red-500 focus:outline-none"
-              >
-                <option value="indirect_prompt_injection_suspected">
-                  Indirect Prompt Injection Suspected (ASI01)
-                </option>
-                <option value="privilege_escalation_attempt">
-                  Multi-Agent Privilege Escalation (ASI07 / ASI08)
-                </option>
-                <option value="data_exfiltration_anomaly">
-                  Rogue Agent & Data Exfiltration (ASI10)
-                </option>
-                <option value="threshold_velocity_breached">
-                  Violation Velocity Threshold Breached (3 in 5 min)
-                </option>
-                <option value="custom">Other / Custom Rationale</option>
-              </select>
-            </div>
+              <div className="space-y-2">
+                {[
+                  { id: 'indirect_prompt_injection_suspected', label: 'Indirect Prompt Injection Suspected' },
+                  { id: 'rapid_policy_violation_spike', label: 'Rapid Policy Violation Velocity Spike (>3/min)' },
+                  { id: 'unauthorized_data_exfiltration_attempt', label: 'Unauthorized PII Exfiltration Attempt' },
+                  { id: 'operator_manual_override', label: 'Operator Manual Intervention' },
+                  { id: 'custom', label: 'Custom Rationale...' },
+                ].map((opt) => (
+                  <label
+                    key={opt.id}
+                    className="flex items-center space-x-2 text-slate-300 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="reason"
+                      value={opt.id}
+                      checked={reason === opt.id}
+                      onChange={() => setReason(opt.id)}
+                      className="text-rose-600 focus:ring-rose-500"
+                    />
+                    <span>{opt.label}</span>
+                  </label>
+                ))}
+              </div>
 
-            {reason === 'custom' && (
-              <div>
-                <input
-                  type="text"
-                  placeholder="Enter specific incident rationale..."
+              {reason === 'custom' && (
+                <textarea
                   value={customReason}
                   onChange={(e) => setCustomReason(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-slate-200 text-xs font-mono focus:border-red-500 focus:outline-none"
+                  placeholder="Provide precise details for the cryptographic audit ledger..."
+                  className="mt-2 w-full p-2.5 rounded-lg bg-[#0B0F18] border border-[#2B364D] text-slate-200 text-xs focus:outline-none focus:border-rose-500"
+                  rows={2}
                 />
-              </div>
-            )}
+              )}
+            </div>
 
-            <div className="pt-2 flex items-center space-x-3">
+            <div className="pt-3 border-t border-[#1E2638] flex items-center justify-end space-x-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-2.5 rounded-lg border border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold"
+                disabled={loading}
+                className="px-4 py-2 rounded-lg bg-[#182030] hover:bg-[#202B40] text-slate-300 font-medium text-xs border border-[#2A374F]"
               >
-                CANCEL
+                Cancel
               </button>
               <button
                 type="button"
                 onClick={handleConfirm}
                 disabled={loading}
-                className="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shadow-glow-red"
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs flex items-center space-x-1.5 shadow-sm disabled:opacity-50"
               >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>REVOKING...</span>
-                  </>
-                ) : (
-                  <>
-                    <AlertOctagon className="w-4 h-4" />
-                    <span>CONFIRM KILL</span>
-                  </>
-                )}
+                {loading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ShieldAlert className="w-3.5 h-3.5" />}
+                <span>Execute Emergency Revocation</span>
               </button>
             </div>
           </div>

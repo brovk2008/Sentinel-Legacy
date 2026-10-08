@@ -29,7 +29,7 @@ export const ViolationVelocityChart: React.FC<ViolationVelocityChartProps> = ({ 
     { time: '14:15', violations: 1, threshold: 3 },
     { time: '14:20', violations: 0, threshold: 3 },
     { time: '14:25', violations: 2, threshold: 3 },
-    { time: '14:30', violations: 4, threshold: 3 }, // Spike above threshold
+    { time: '14:30', violations: 4, threshold: 3 },
     { time: '14:35', violations: 2, threshold: 3 },
     { time: '14:40', violations: 1, threshold: 3 },
     { time: '14:45', violations: 0, threshold: 3 },
@@ -40,10 +40,10 @@ export const ViolationVelocityChart: React.FC<ViolationVelocityChartProps> = ({ 
   const chartData = data && data.length > 0 ? data : defaultData;
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 backdrop-blur-sm flex flex-col h-full">
-      <div className="flex items-center justify-between pb-3 border-b border-slate-800 mb-3">
+    <div className="rounded-xl border border-[#1E2638] bg-[#0E1320] p-4 flex flex-col h-full">
+      <div className="flex items-center justify-between pb-3 border-b border-[#1E2638] mb-3">
         <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-cyan-400" />
+          <Activity className="w-4 h-4 text-blue-400" />
           <span className="text-sm font-semibold text-white">
             Violation Velocity (Sliding 60-Sec Window)
           </span>
@@ -53,8 +53,8 @@ export const ViolationVelocityChart: React.FC<ViolationVelocityChartProps> = ({ 
             <span className="w-2 h-0.5 bg-rose-500 inline-block" />
             <span>Critical Threshold (&gt; 3/min)</span>
           </div>
-          <div className="flex items-center gap-1.5 text-cyan-400">
-            <span className="w-2 h-2 rounded-full bg-cyan-400 inline-block" />
+          <div className="flex items-center gap-1.5 text-slate-300">
+            <span className="w-2 h-2 rounded-full bg-rose-400 inline-block" />
             <span>Violations</span>
           </div>
         </div>
@@ -65,30 +65,30 @@ export const ViolationVelocityChart: React.FC<ViolationVelocityChartProps> = ({ 
           <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="violationGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#EF4444" stopOpacity={0.6} />
-                <stop offset="95%" stopColor="#06B6D4" stopOpacity={0.0} />
+                <stop offset="5%" stopColor="#EF4444" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="#EF4444" stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#1A2234" vertical={false} />
             <XAxis
               dataKey="time"
               stroke="#64748B"
               fontSize={10}
               tickLine={false}
-              axisLine={{ stroke: '#334155' }}
+              axisLine={{ stroke: '#2B364D' }}
             />
             <YAxis
               stroke="#64748B"
               fontSize={10}
               tickLine={false}
-              axisLine={{ stroke: '#334155' }}
+              axisLine={{ stroke: '#2B364D' }}
               domain={[0, 6]}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#0F172A',
-                borderColor: '#334155',
-                borderRadius: '8px',
+                backgroundColor: '#0F1420',
+                borderColor: '#2B364D',
+                borderRadius: '6px',
                 fontSize: '11px',
                 fontFamily: 'monospace',
                 color: '#F8FAFC',
@@ -97,10 +97,10 @@ export const ViolationVelocityChart: React.FC<ViolationVelocityChartProps> = ({ 
             />
             <ReferenceLine
               y={3}
-              stroke="#EF4444"
+              stroke="#DC2626"
               strokeDasharray="4 4"
               label={{
-                value: 'KILL SWITCH TRIGGER',
+                value: 'KILL SWITCH THRESHOLD',
                 fill: '#EF4444',
                 fontSize: 9,
                 position: 'insideTopRight',
@@ -110,7 +110,7 @@ export const ViolationVelocityChart: React.FC<ViolationVelocityChartProps> = ({ 
               type="monotone"
               dataKey="violations"
               stroke="#EF4444"
-              strokeWidth={2}
+              strokeWidth={1.5}
               fillOpacity={1}
               fill="url(#violationGradient)"
             />

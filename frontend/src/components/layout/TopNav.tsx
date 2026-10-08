@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Radio, AlertOctagon, Bell, UserCheck, Activity } from 'lucide-react';
+import { Shield, Radio, AlertOctagon, Bell, CheckCircle2 } from 'lucide-react';
 import { Alert } from '../../types';
 
 interface TopNavProps {
@@ -15,51 +15,53 @@ export const TopNav: React.FC<TopNavProps> = ({
   onOpenKillSwitch,
   onOpenAlerts,
 }) => {
-  const criticalCount = alerts.filter(a => a.level === 'critical').length;
+  const criticalCount = alerts.filter((a) => a.level === 'critical').length;
 
   return (
-    <header className="h-16 border-b border-slate-800/80 bg-[#0B111D]/90 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-40">
+    <header className="h-16 border-b border-[#1E2638] bg-[#0D121D] px-6 flex items-center justify-between sticky top-0 z-40 shadow-sm">
       {/* Brand & System Status */}
       <div className="flex items-center space-x-6">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-600 to-cyan-400 p-0.5 flex items-center justify-center shadow-glow">
-            <div className="w-full h-full bg-[#0B111D] rounded-[7px] flex items-center justify-center">
-              <Shield className="w-5 h-5 text-cyan-400" />
-            </div>
+          <div className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-sm">
+            <Shield className="w-4 h-4" />
           </div>
           <div>
             <div className="flex items-center space-x-2">
-              <span className="font-bold text-lg tracking-wider text-slate-100">
-                SENTINEL <span className="text-cyan-400">LEGACY</span>
+              <span className="font-semibold text-base text-slate-100 tracking-tight">
+                Sentinel Legacy
               </span>
-              <span className="px-1.5 py-0.5 text-[10px] uppercase font-mono font-semibold rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">
+              <span className="px-1.5 py-0.5 text-[10px] font-mono font-semibold rounded bg-slate-800 text-slate-300 border border-slate-700">
                 v2.0
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-mono tracking-tight">
-              Agentic Enterprise Governance Infrastructure
+            <p className="text-[11px] text-slate-400 font-sans">
+              Enterprise AI Governance &amp; Control Plane
             </p>
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center space-x-2 pl-4 border-l border-slate-800">
+        {/* Engine Status Tag */}
+        <div className="hidden lg:flex items-center space-x-2 pl-4 border-l border-[#1E2638]">
           <span className="flex h-2 w-2 relative">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
           <span className="text-xs font-mono text-emerald-400 font-medium">
-            CEDAR ENGINE: ACTIVE (SMT-VERIFIED)
+            Cedar Policy Engine: Active
           </span>
         </div>
       </div>
 
       {/* Right Controls */}
-      <div className="flex items-center space-x-4">
-        {/* WebSocket Heartbeat */}
-        <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-xs font-mono">
-          <Radio className={`w-3.5 h-3.5 ${wsConnected ? 'text-emerald-400 animate-pulse' : 'text-amber-400'}`} />
+      <div className="flex items-center space-x-3">
+        {/* WebSocket Connection State */}
+        <div className="flex items-center space-x-2 px-2.5 py-1 rounded-md bg-[#141A28] border border-[#212B3E] text-xs font-mono">
+          <span
+            className={`w-2 h-2 rounded-full ${
+              wsConnected ? 'bg-emerald-500' : 'bg-amber-500'
+            }`}
+          />
           <span className={wsConnected ? 'text-slate-300' : 'text-amber-400'}>
-            {wsConnected ? 'LIVE FEED (WS)' : 'CONNECTING...'}
+            {wsConnected ? 'Live Feed (WS)' : 'Reconnecting...'}
           </span>
         </div>
 
@@ -67,30 +69,30 @@ export const TopNav: React.FC<TopNavProps> = ({
         {criticalCount > 0 && (
           <button
             onClick={onOpenAlerts}
-            className="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-red-500/15 border border-red-500/40 text-red-400 text-xs font-semibold animate-pulse hover:bg-red-500/25 transition-all"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-rose-950/60 border border-rose-800/60 text-rose-300 text-xs font-semibold hover:bg-rose-900/60 transition-colors"
           >
-            <Bell className="w-3.5 h-3.5 text-red-400" />
-            <span>{criticalCount} CRITICAL ALERT{criticalCount > 1 ? 'S' : ''}</span>
+            <Bell className="w-3.5 h-3.5 text-rose-400" />
+            <span>{criticalCount} Critical Alert{criticalCount > 1 ? 's' : ''}</span>
           </button>
         )}
 
-        {/* Global Emergency Kill Switch Button */}
+        {/* Authoritative Kill Switch Button */}
         <button
           onClick={onOpenKillSwitch}
-          className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-500 hover:to-rose-600 text-white text-xs font-bold uppercase tracking-wider shadow-glow-red border border-red-500/50 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+          className="flex items-center space-x-1.5 px-3.5 py-1.5 rounded-md bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold border border-rose-500/80 shadow-sm transition-colors"
         >
-          <AlertOctagon className="w-4 h-4 text-white" />
-          <span>KILL SWITCH</span>
+          <AlertOctagon className="w-3.5 h-3.5" />
+          <span>Emergency Kill Switch</span>
         </button>
 
         {/* Operator Profile */}
-        <div className="hidden sm:flex items-center space-x-3 pl-3 border-l border-slate-800">
-          <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-cyan-400 font-semibold text-xs">
+        <div className="hidden sm:flex items-center space-x-3 pl-3 border-l border-[#1E2638]">
+          <div className="w-8 h-8 rounded-full bg-[#1A2234] border border-[#2B364D] flex items-center justify-center text-blue-400 font-semibold text-xs">
             PS
           </div>
           <div className="text-left">
             <p className="text-xs font-semibold text-slate-200 leading-tight">Priya Sharma</p>
-            <p className="text-[10px] text-slate-400 font-mono">Gov Admin & Finance Mgr</p>
+            <p className="text-[10px] text-slate-400">Governance Admin</p>
           </div>
         </div>
       </div>

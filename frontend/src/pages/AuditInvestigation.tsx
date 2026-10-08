@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FileText, Shield, Filter, Search, Download, Layers } from 'lucide-react';
+import { FileText, Filter, Search, Download, Layers } from 'lucide-react';
 import { AuditEntry } from '../types';
 import { AuditTimeline } from '../components/audit/AuditTimeline';
 import { ChainVerifier } from '../components/audit/ChainVerifier';
@@ -37,7 +37,7 @@ export const AuditInvestigation: React.FC<AuditInvestigationProps> = ({ entries 
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `sentinel_audit_ledger_full_${Date.now()}.json`;
+    link.download = `sentinel_audit_ledger_${Date.now()}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -45,29 +45,29 @@ export const AuditInvestigation: React.FC<AuditInvestigationProps> = ({ entries 
   return (
     <div className="space-y-6">
       {/* Top Header Strip */}
-      <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 flex flex-wrap items-center justify-between gap-4">
+      <div className="p-4 rounded-xl bg-[#0E1320] border border-[#1E2638] flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+          <div className="p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
             <FileText className="w-5 h-5" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
+            <h1 className="text-base font-semibold text-white tracking-tight flex items-center gap-2">
               <span>Cryptographic Audit &amp; Forensic Ledger</span>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-                SHA-256 TAMPER-EVIDENT
+              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-[#141A28] text-slate-300 border border-[#222C3E]">
+                SHA-256 APPEND-ONLY
               </span>
             </h1>
-            <p className="text-xs text-slate-400">
-              Zero-knowledge verifiable decision chain satisfying RFC 6962 and EU AI Act Art. 12
+            <p className="text-xs text-slate-400 font-sans">
+              Cryptographically linked decision chain satisfying RFC 6962 and EU AI Act Art. 12
             </p>
           </div>
         </div>
 
         <button
           onClick={handleExportJson}
-          className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center gap-1.5 border border-slate-700 transition-colors"
+          className="px-3.5 py-1.5 rounded-lg bg-[#141A28] hover:bg-[#1E263A] text-slate-200 font-medium text-xs flex items-center gap-1.5 border border-[#263148] transition-colors"
         >
-          <Download className="w-3.5 h-3.5 text-cyan-400" />
+          <Download className="w-3.5 h-3.5 text-blue-400" />
           Export Ledger (.JSON)
         </button>
       </div>
@@ -76,16 +76,16 @@ export const AuditInvestigation: React.FC<AuditInvestigationProps> = ({ entries 
       <ChainVerifier />
 
       {/* Filter and Search Bar */}
-      <div className="p-4 rounded-xl bg-slate-900/40 border border-slate-800 flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div className="p-4 rounded-xl bg-[#0E1320] border border-[#1E2638] flex flex-wrap items-center justify-between gap-3 text-xs">
         <div className="flex flex-wrap items-center gap-3">
           {/* Agent Filter */}
           <div className="flex items-center gap-1.5 text-slate-400">
-            <Layers className="w-3.5 h-3.5 text-cyan-400" />
+            <Layers className="w-3.5 h-3.5 text-blue-400" />
             <span>Agent:</span>
             <select
               value={selectedAgent}
               onChange={(e) => setSelectedAgent(e.target.value)}
-              className="px-2.5 py-1 rounded bg-slate-950 border border-slate-700 text-white font-mono text-xs focus:outline-none focus:border-cyan-500"
+              className="px-2.5 py-1 rounded bg-[#0A0E18] border border-[#2B364D] text-white font-mono text-xs focus:outline-none focus:border-blue-500"
             >
               <option value="ALL">All Agents</option>
               {uniqueAgents.map((id) => (
@@ -98,12 +98,12 @@ export const AuditInvestigation: React.FC<AuditInvestigationProps> = ({ entries 
 
           {/* Decision Filter */}
           <div className="flex items-center gap-1.5 text-slate-400">
-            <Filter className="w-3.5 h-3.5 text-cyan-400" />
+            <Filter className="w-3.5 h-3.5 text-blue-400" />
             <span>Decision:</span>
             <select
               value={selectedDecision}
               onChange={(e) => setSelectedDecision(e.target.value)}
-              className="px-2.5 py-1 rounded bg-slate-950 border border-slate-700 text-white font-mono text-xs focus:outline-none focus:border-cyan-500"
+              className="px-2.5 py-1 rounded bg-[#0A0E18] border border-[#2B364D] text-white font-mono text-xs focus:outline-none focus:border-blue-500"
             >
               <option value="ALL">All Decisions</option>
               <option value="PERMIT">PERMIT</option>
@@ -115,13 +115,13 @@ export const AuditInvestigation: React.FC<AuditInvestigationProps> = ({ entries 
 
         {/* Search input */}
         <div className="relative">
-          <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search action, resource, hash..."
-            className="pl-8 pr-3 py-1 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs w-64 focus:outline-none focus:border-cyan-500"
+            className="pl-8 pr-3 py-1 rounded-lg bg-[#0A0E18] border border-[#2B364D] text-white font-mono text-xs w-64 focus:outline-none focus:border-blue-500"
           />
         </div>
       </div>

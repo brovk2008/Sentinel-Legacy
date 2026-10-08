@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, Search, Download, FileText, CheckCircle2, User, Cpu } from 'lucide-react';
+import { ShieldCheck, Search, Download, FileText, User, Cpu } from 'lucide-react';
 
 interface DPDPAData {
   data_principal_id: string;
@@ -36,7 +36,6 @@ export const DPDPAQueryPanel: React.FC = () => {
         const data = await resp.json();
         setReport(data);
       } else {
-        // Fallback realistic response
         setReport({
           data_principal_id: dataPrincipalId,
           total_interactions: 8,
@@ -107,10 +106,10 @@ export const DPDPAQueryPanel: React.FC = () => {
   };
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 backdrop-blur-sm">
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-800 mb-4">
+    <div className="rounded-xl border border-[#1E2638] bg-[#0E1320] p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#1E2638] mb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+          <div className="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400">
             <ShieldCheck className="w-4 h-4" />
           </div>
           <div>
@@ -118,26 +117,26 @@ export const DPDPAQueryPanel: React.FC = () => {
               DPDPA 2023 Section 11 Data Principal Inquiry
             </h3>
             <p className="text-[11px] text-slate-400">
-              Statutory right of grievance redressal & AI automated decision disclosure
+              Statutory right of grievance redressal &amp; automated AI decision disclosure
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={dataPrincipalId}
               onChange={(e) => setDataPrincipalId(e.target.value)}
               placeholder="Data Principal ID (e.g. cust_9921)"
-              className="pl-8 pr-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs w-56 focus:outline-none focus:border-indigo-500"
+              className="pl-8 pr-3 py-1.5 rounded-lg bg-[#0A0E18] border border-[#2B364D] text-white font-mono text-xs w-56 focus:outline-none focus:border-blue-500"
             />
           </div>
           <button
             onClick={handleQuery}
             disabled={loading}
-            className="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs transition-colors disabled:opacity-50"
+            className="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium text-xs transition-colors disabled:opacity-50"
           >
             {loading ? 'Querying...' : 'Generate Dossier'}
           </button>
@@ -148,33 +147,33 @@ export const DPDPAQueryPanel: React.FC = () => {
         <div className="space-y-4">
           {/* Summary Metric Strip */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <div className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 flex flex-col">
+            <div className="p-3 rounded-lg bg-[#121826] border border-[#1E2638] flex flex-col">
               <span className="text-[10px] text-slate-500 uppercase font-semibold">Data Principal</span>
-              <span className="text-sm font-bold font-mono text-cyan-300 truncate">{report.data_principal_id}</span>
+              <span className="text-sm font-bold font-mono text-slate-200 truncate">{report.data_principal_id}</span>
             </div>
-            <div className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 flex flex-col">
+            <div className="p-3 rounded-lg bg-[#121826] border border-[#1E2638] flex flex-col">
               <span className="text-[10px] text-slate-500 uppercase font-semibold">AI Invocations</span>
               <span className="text-sm font-bold font-mono text-white">{report.total_interactions} Events</span>
             </div>
-            <div className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 flex flex-col">
+            <div className="p-3 rounded-lg bg-[#121826] border border-[#1E2638] flex flex-col">
               <span className="text-[10px] text-slate-500 uppercase font-semibold">High-Risk Actions</span>
               <span className="text-sm font-bold font-mono text-amber-400">{report.high_risk_decisions.length}</span>
             </div>
-            <div className="p-3 rounded-lg bg-slate-950/70 border border-slate-800 flex flex-col">
+            <div className="p-3 rounded-lg bg-[#121826] border border-[#1E2638] flex flex-col">
               <span className="text-[10px] text-slate-500 uppercase font-semibold">Human Approvals</span>
               <span className="text-sm font-bold font-mono text-emerald-400">{report.human_oversight_events.length}</span>
             </div>
           </div>
 
           {/* Model Processors */}
-          <div className="p-3 rounded-lg bg-slate-950/50 border border-slate-800/80 flex items-center justify-between text-xs">
+          <div className="p-3 rounded-lg bg-[#121826] border border-[#1E2638] flex items-center justify-between text-xs">
             <div className="flex items-center gap-2 text-slate-400">
-              <Cpu className="w-4 h-4 text-cyan-400" />
+              <Cpu className="w-4 h-4 text-blue-400" />
               <span>Foundation Models Processing Principal Data:</span>
             </div>
             <div className="flex flex-wrap gap-1.5 font-mono text-[10px]">
               {report.models_used.map((model, idx) => (
-                <span key={idx} className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">
+                <span key={idx} className="px-2 py-0.5 rounded bg-[#1A2234] text-slate-300 border border-[#2B364D]">
                   {model}
                 </span>
               ))}
@@ -184,17 +183,17 @@ export const DPDPAQueryPanel: React.FC = () => {
           {/* High-Risk Decision Log */}
           <div>
             <div className="text-xs font-semibold text-slate-300 mb-2 flex items-center gap-1.5">
-              <FileText className="w-3.5 h-3.5 text-indigo-400" />
+              <FileText className="w-3.5 h-3.5 text-blue-400" />
               Section 11 Decision Ledger Records
             </div>
             <div className="space-y-1.5 max-h-40 overflow-y-auto">
               {report.high_risk_decisions.map((dec, idx) => (
                 <div
                   key={idx}
-                  className="p-2 rounded bg-slate-950 border border-slate-800 text-xs flex items-center justify-between"
+                  className="p-2 rounded bg-[#121826] border border-[#1E2638] text-xs flex items-center justify-between"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-semibold text-white">{dec.action}</span>
+                    <span className="font-mono font-medium text-white">{dec.action}</span>
                     <span className="text-[10px] font-mono text-slate-500">by {dec.agent_id}</span>
                   </div>
                   <div className="flex items-center gap-3">
@@ -215,12 +214,12 @@ export const DPDPAQueryPanel: React.FC = () => {
           </div>
 
           {/* Export Action */}
-          <div className="flex justify-end pt-2 border-t border-slate-800">
+          <div className="flex justify-end pt-2 border-t border-[#1E2638]">
             <button
               onClick={handleDownload}
-              className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center gap-1.5 border border-slate-700 transition-colors"
+              className="px-3.5 py-1.5 rounded-lg bg-[#182030] hover:bg-[#202B40] text-slate-200 font-medium text-xs flex items-center gap-1.5 border border-[#2A374F] transition-colors"
             >
-              <Download className="w-3.5 h-3.5 text-indigo-400" />
+              <Download className="w-3.5 h-3.5 text-blue-400" />
               Export Certified DPDPA Disclosure Packet (.JSON)
             </button>
           </div>

@@ -49,20 +49,20 @@ export const TokenCostChart: React.FC<TokenCostChartProps> = ({ data }) => {
   const totalTokens = chartData.reduce((acc, curr) => acc + curr.inputTokens + curr.outputTokens, 0);
 
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900/40 p-4 backdrop-blur-sm flex flex-col h-full">
-      <div className="flex flex-wrap items-center justify-between pb-3 border-b border-slate-800 mb-3 gap-2">
+    <div className="rounded-xl border border-[#1E2638] bg-[#0E1320] p-4 flex flex-col h-full">
+      <div className="flex flex-wrap items-center justify-between pb-3 border-b border-[#1E2638] mb-3 gap-2">
         <div className="flex items-center gap-2">
-          <Zap className="w-4 h-4 text-cyan-400" />
+          <Zap className="w-4 h-4 text-blue-400" />
           <span className="text-sm font-semibold text-white">
             OpenTelemetry GenAI Token &amp; Cost Attribution
           </span>
         </div>
         <div className="flex items-center gap-4 text-xs font-mono">
           <div className="flex items-center gap-1 text-slate-300">
-            <span className="text-slate-500">Total Tokens:</span>
-            <span className="text-white font-bold">{(totalTokens / 1000).toFixed(1)}k</span>
+            <span className="text-slate-400">Total Tokens:</span>
+            <span className="text-white font-medium">{(totalTokens / 1000).toFixed(1)}k</span>
           </div>
-          <div className="flex items-center gap-1 text-emerald-400 font-bold">
+          <div className="flex items-center gap-1 text-emerald-400 font-semibold">
             <DollarSign className="w-3.5 h-3.5 text-emerald-400" />
             <span>${totalCost.toFixed(2)}</span>
           </div>
@@ -72,26 +72,26 @@ export const TokenCostChart: React.FC<TokenCostChartProps> = ({ data }) => {
       <div className="w-full h-56 pt-2">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#1E293B" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="#1A2234" vertical={false} />
             <XAxis
               dataKey="agent"
               stroke="#64748B"
               fontSize={10}
               tickLine={false}
-              axisLine={{ stroke: '#334155' }}
+              axisLine={{ stroke: '#2B364D' }}
             />
             <YAxis
               stroke="#64748B"
               fontSize={10}
               tickLine={false}
-              axisLine={{ stroke: '#334155' }}
+              axisLine={{ stroke: '#2B364D' }}
               tickFormatter={(v) => `${(v / 1000).toFixed(0)}k`}
             />
             <Tooltip
               contentStyle={{
-                backgroundColor: '#0F172A',
-                borderColor: '#334155',
-                borderRadius: '8px',
+                backgroundColor: '#0F1420',
+                borderColor: '#2B364D',
+                borderRadius: '6px',
                 fontSize: '11px',
                 fontFamily: 'monospace',
                 color: '#F8FAFC',
@@ -105,8 +105,8 @@ export const TokenCostChart: React.FC<TokenCostChartProps> = ({ data }) => {
               wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
               iconSize={8}
             />
-            <Bar dataKey="inputTokens" name="Prompt Tokens" fill="#06B6D4" radius={[4, 4, 0, 0]} stackId="tokens" />
-            <Bar dataKey="outputTokens" name="Completion Tokens" fill="#8B5CF6" radius={[4, 4, 0, 0]} stackId="tokens" />
+            <Bar dataKey="inputTokens" name="Prompt Tokens" fill="#3B82F6" radius={[3, 3, 0, 0]} stackId="tokens" />
+            <Bar dataKey="outputTokens" name="Completion Tokens" fill="#6366F1" radius={[3, 3, 0, 0]} stackId="tokens" />
           </BarChart>
         </ResponsiveContainer>
       </div>
