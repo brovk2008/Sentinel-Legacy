@@ -16,6 +16,9 @@ class AgentStatus(str, Enum):
 
 
 class ModelArchitecture(str, Enum):
+    GEMINI_1_5_FLASH = "gemini-1.5-flash"
+    GEMINI_2_FLASH = "gemini-2.0-flash-exp"
+    OPENROUTER_FREE = "openrouter-free"
     CLAUDE_SONNET_4_6 = "claude-sonnet-4-6"
     GPT_4O = "gpt-4o"
     LLAMA_3_70B = "llama-3-70b"

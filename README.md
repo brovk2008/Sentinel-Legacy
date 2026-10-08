@@ -7,7 +7,7 @@
 ![Policy Engine: Cedar](https://img.shields.io/badge/Policy%20Engine-Cedar%20(Rust)-orange.svg?style=for-the-badge)
 ![Auth: RFC 8707](https://img.shields.io/badge/Auth-RFC%208707%20OAuth%202.1-green.svg?style=for-the-badge)
 ![Compliance](https://img.shields.io/badge/Compliance-DPDPA%202023%20%7C%20EU%20AI%20Act-purple.svg?style=for-the-badge)
-![Tests](https://img.shields.io/badge/Tests-23%2F23%20Passing-emerald.svg?style=for-the-badge)
+![Tests](https://img.shields.io/badge/Tests-27%2F27%20Passing-emerald.svg?style=for-the-badge)
 ![Architecture](https://img.shields.io/badge/Protocol-MCP%202025--11--25-cyan.svg?style=for-the-badge)
 
 <p align="center">
@@ -22,6 +22,7 @@
 - [Executive Overview](#executive-overview)
 - [The Governance Problem](#the-governance-problem)
 - [System Architecture](#system-architecture)
+- [Free LLM API Integration (Google Gemini & OpenRouter)](#free-llm-api-integration-google-gemini--openrouter)
 - [Core Subsystems](#core-subsystems)
   - [1. Formal Cedar Policy Engine](#1-formal-cedar-policy-engine-rust-native)
   - [2. RFC 8707 Audience-Bound OAuth 2.1 M2M Tokens](#2-rfc-8707-audience-bound-oauth-21-m2m-tokens)
@@ -119,6 +120,46 @@ flowchart TD
     AuditLedger -->|Audit Stream| WSHub
     WSHub -->|Live Updates| UI_Dash
 ```
+
+---
+
+## Free LLM API Integration (Google Gemini & OpenRouter)
+
+Sentinel Legacy v2.0 includes first-class native support for **100% free foundation model APIs**, enabling developers to deploy autonomous agents and verify governance workflows without spending money or providing credit card credentials.
+
+### Supported Free Providers
+
+| Provider | Model ID | Cost | Free Tier Specs & Link |
+| :--- | :--- | :--- | :--- |
+| **Google Gemini** *(Recommended)* | `gemini-1.5-flash`<br/>`gemini-2.0-flash` | **$0.00** | **15 RPM / 1M TPM / 1,500 RPD free forever**.<br/>Obtain free key: [Google AI Studio](https://aistudio.google.com/app/apikey) |
+| **OpenRouter Free Tier** | `google/gemini-2.0-flash-exp:free`<br/>`meta-llama/llama-3.2-3b-instruct:free`<br/>`deepseek/deepseek-r1:free` | **$0.00** | **Free public model endpoints** (models with `:free` tag).<br/>Obtain key: [OpenRouter API Keys](https://openrouter.ai/keys) |
+| **Offline Rule Simulator** | `mock` / `offline-rules` | **$0.00** | **Zero external network dependencies**.<br/>Deterministic tool planning simulation if no keys are provided. |
+
+### Environment Configuration (`.env`)
+
+Simply configure your keys in `.env` (copied from `.env.example`):
+
+```bash
+# -----------------------------------------------------------------
+# Autonomous LLM Engine (Free Tier Providers)
+# -----------------------------------------------------------------
+# 1. Google Gemini (Get free key at: https://aistudio.google.com/app/apikey)
+GEMINI_API_KEY="AIzaSy..."
+GEMINI_MODEL="gemini-1.5-flash"
+
+# 2. OpenRouter Free Models (Get free key at: https://openrouter.ai/keys)
+OPENROUTER_API_KEY="sk-or-v1-..."
+OPENROUTER_MODEL="google/gemini-2.0-flash-exp:free"
+
+# 3. Provider Selector: "auto" (default) | "gemini" | "openrouter" | "mock"
+# "auto" detects available keys and gracefully falls back to mock simulation if empty.
+LLM_PROVIDER="auto"
+```
+
+### How Sentinel Legacy Uses Free LLM APIs
+1. **Dynamic Tool Planning**: The frontline agent (`SupportAgent`) submits user conversational intents (e.g., *"My order arrived broken, refund ₹700"*) to the configured LLM client.
+2. **Standard OpenAI-Compatible Protocol**: Google Gemini is invoked via its official OpenAI-compatible endpoint (`https://generativelanguage.googleapis.com/v1beta/openai/chat/completions`), and OpenRouter via its public gateway (`https://openrouter.ai/api/v1/chat/completions`).
+3. **Formal Control Plane Enforcement**: Regardless of the LLM's raw output or prompt injection attacks, all proposed tool calls are intercepted by Sentinel's inline reverse proxy (`POST /api/v1/proxy/mcp`) for Cedar policy evaluation, RFC 8707 validation, and cryptographic ledger hashing.
 
 ---
 
@@ -334,7 +375,7 @@ Run the complete test suite across unit and integration targets:
 pytest tests/ -v
 ```
 
-### Verified Test Matrix (23/23 Passing)
+### Verified Test Matrix (27/27 Passing)
 - `tests/unit/test_cedar_engine.py`:
   - `test_permit_read_order_history`: Normal permit evaluation.
   - `test_forbid_export_customer_data`: Cedar `DATA-012` strict forbid.
@@ -357,6 +398,11 @@ pytest tests/ -v
   - `test_token_revocation`: $O(1)$ JTI revocation.
 - `tests/unit/test_anomaly_detector.py`:
   - `test_violation_velocity_thresholds`: Sliding 60s window violation counter.
+- `tests/unit/test_free_llm.py`:
+  - `test_llm_client_provider_resolution`: Verifies automatic provider selection between Gemini, OpenRouter, and mock.
+  - `test_mock_llm_plan_normal_refund`: Verifies intelligent tool planning on low-risk customer refund requests.
+  - `test_mock_llm_plan_high_value_refund`: Verifies escalation planning on high-value refund requests.
+  - `test_mock_llm_plan_prompt_injection`: Verifies detection and tool planning under prompt injection attacks.
 - `tests/integration/test_mcp_proxy.py`:
   - `test_full_mcp_proxy_flow`: End-to-end proxy decision lifecycle.
 - `tests/integration/test_kill_switch.py`:

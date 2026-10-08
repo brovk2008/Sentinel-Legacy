@@ -35,19 +35,27 @@ async def main():
             return
 
     agent = SupportAgent(base_url=base_url)
+    provider_name = agent.llm_client.provider if agent.llm_client else "mock"
+    model_name = agent.llm_client.model if agent.llm_client else "offline-simulation"
 
     await print_banner("SENTINEL LEGACY — 3-PHASE GOVERNANCE DEMONSTRATION", "\033[95m")
     print("This narrated script executes the live 3-Phase Enterprise Governance Flow:")
     print("  Phase 1: Autonomous Micro-Refund Execution (Tier 1)")
     print("  Phase 2: High-Consequence Human Intercept (Tier 3 HITL)")
     print("  Phase 3: Multi-Vector Prompt Injection & Sub-Second Kill Switch (Tier 4)")
-    print("\nWatch the live dashboard at http://localhost:5173 concurrently!\n")
+    print(f"\n🧠 Autonomous Agent Engine: {provider_name.upper()} ({model_name})")
+    print("Watch the live dashboard at http://localhost:5173 concurrently!\n")
 
     # ─────────────────────────────────────────────────────────────
     # PHASE 1: Autonomous Execution
     # ─────────────────────────────────────────────────────────────
     await print_banner("PHASE 1: Autonomous Execution (Frictionless Micro-Actions)", "\033[92m")
-    print("👤 Customer Prompt: 'My order #ORD-8821 arrived damaged, I want a refund'")
+    user_prompt_1 = "My order #ORD-8821 arrived damaged, I want a refund"
+    print(f"👤 Customer Prompt: '{user_prompt_1}'")
+    if agent.llm_client:
+        plan1 = await agent.plan_action(user_prompt_1)
+        print(f"💡 LLM Plan ({provider_name}): Proposes '{plan1.get('tool_name')}' | Rationale: {plan1.get('reasoning')}")
+
     print("🤖 SupportAgent: Authenticating via OAuth 2.1 M2M Client Credentials...")
     await agent.authenticate()
     print("✅ Token issued with RFC 8707 audience claim: https://crm.corp.internal")
